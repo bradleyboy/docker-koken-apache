@@ -25,15 +25,20 @@ RUN apt-get -y install php5-curl php5-imagick php5-mcrypt ffmpeg
 # mysql config
 RUN sed -i -e"s/^bind-address\s*=\s*127.0.0.1/bind-address = 0.0.0.0/" /etc/mysql/my.cnf
 
-# Apache foreground script (used by supervisor)
-ADD ./shell/apache-foreground.sh /etc/apache2/foreground.sh
-RUN chmod 755 /etc/apache2/foreground.sh
+# PHP config
+RUN sed -i -e"s/upload_max_filesize = 2M/upload_max_filesize = 100M/" /etc/php5/apache2/php.ini
+RUN sed -i -e"s/post_max_size = 8M/post_max_size = 101M/" /etc/php5/apache2/php.ini
+
+# Apache conf
+ADD ./conf/apache/ports.conf /etc/apache2/ports.conf
+ADD ./conf/apache/000-default.conf /etc/apache2/sites-enabled/000-default.conf
+RUN a2enmod rewrite
 
 # Supervisor Config
 ADD ./conf/supervisord.conf /etc/supervisor/supervisord.conf
 
 # Koken installer helpers
-ADD ./php/index.php /installer.php
+ADD ./php/index.php /index.php
 ADD ./php/pclzip.lib.php /pclzip.lib.php
 ADD ./php/database.php /database.php
 
@@ -45,7 +50,7 @@ ADD ./shell/start.sh /start.sh
 RUN chmod 755 /start.sh
 
 # private expose
-EXPOSE 8888
+EXPOSE 8080
 
 # If SSH is needed
 # RUN apt-get -y install openssh-server

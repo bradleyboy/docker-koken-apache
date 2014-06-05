@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ ! -f /var/www/storage/configuration/database.php ]; then
+if [ ! -f /var/www/html/storage/configuration/database.php ]; then
 
   if [ ! -f /var/lib/mysql/ibdata1 ]; then
     mysql_install_db
@@ -38,21 +38,22 @@ if [ ! -f /var/www/storage/configuration/database.php ]; then
 
   echo "=> Setting up Koken installer"
   # Setup webroot
-  rm -rf /var/www/*
+  rm -rf /var/www/html/*
   mkdir -p /var/www
 
   # Download core.zip / elementary.zip to save time for the end user.
-  curl --silent -o /var/www/core.zip https://s3.amazonaws.com/install.koken.me/releases/latest.zip
-  curl --silent -o /var/www/elementary.zip https://koken-store.s3.amazonaws.com/plugins/be1cb2d9-ed05-2d81-85b4-23282832eb84.zip
+  curl --silent -o /var/www/html/core.zip https://s3.amazonaws.com/install.koken.me/releases/latest.zip
+  curl --silent -o /var/www/html/elementary.zip https://koken-store.s3.amazonaws.com/plugins/be1cb2d9-ed05-2d81-85b4-23282832eb84.zip
 
   # Move install helpers into place
-  mv /installer.php /var/www/installer.php
-  mv /pclzip.lib.php /var/www/pclzip.lib.php
+  mv /index.php /var/www/html/index.php
+  mv /info.php /var/www/html/info.php
+  mv /pclzip.lib.php /var/www/html/pclzip.lib.php
 
   # Configure Koken database connection
-  sed -e "s/___PWD___/$KOKEN_PASSWORD/" /database.php > /var/www/database.php
-  chown www-data:www-data /var/www/
-  chmod -R 755 /var/www
+  sed -e "s/___PWD___/$KOKEN_PASSWORD/" /database.php > /var/www/html/database.php
+  chown www-data:www-data /var/www/html/
+  chmod -R 755 /var/www/html
 fi
 
 echo "=> Starting supervisord"
