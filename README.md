@@ -1,6 +1,6 @@
 # docker-koken-apache
 
-*This is a work in progress and used mostly for testing. We recommend using the official [Koken Docker image](https://github.com/koken/docker-koken-lemp) for production installs.*.
+*This is a work in progress and used mostly for testing. We recommend using the official [Koken Docker image](https://github.com/koken/docker-koken-lemp) for production installs.*
 
 ## Features
 
